@@ -1,11 +1,13 @@
 from fastapi import FastAPI
-import asyncio
+import httpx
 
 app = FastAPI()
 
 
 @app.get("/")
 async def root():
-    # Simulate an async operation with a 2-second delay
-    await asyncio.sleep(2)
-    return {"message": "Hello World"}
+    async with httpx.AsyncClient() as client:
+        response = await client.get("https://jsonplaceholder.typicode.com/todos")
+        data = response.json()
+
+    return data
